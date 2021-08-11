@@ -78,7 +78,10 @@ def sendMail(subject, rows):
     htmlPart = MIMEText(html, 'html')
     message.attach(htmlPart)
 
-    with smtplib.SMTP_SSL(Config.smtpServer, Config.smtpServerPort, context=context) as server:
+    with smtplib.SMTP(Config.smtpServer, Config.smtpServerPort) as server:
+        server.ehlo()
+        server.starttls(context=context)
+        server.ehlo()
         server.login(Config.mail["from"], Config.mail["fromPwd"])
         server.set_debuglevel(1)
         server.sendmail(Config.mail["from"],
